@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+from relationship_app.models import Author
+
 """Django's command-line utility for administrative tasks."""
 import os
 import sys

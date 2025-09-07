@@ -2,6 +2,7 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from relationship_app.models import CustomUser
 
 
 def main():
@@ -16,6 +17,33 @@ def main():
             "forget to activate a virtual environment?"
         ) from exc
     execute_from_command_line(sys.argv)
+
+
+# Create Admin user
+admin_user = CustomUser.objects.create_user(
+    username="admin1",
+    password="pass1234",
+    role="Admin"
+)
+
+# Create Librarian user
+librarian_user = CustomUser.objects.create_user(
+    username="librarian1",
+    password="pass1234",
+    role="Librarian"
+)
+
+# Create Member user
+member_user = CustomUser.objects.create_user(
+    username="member1",
+    password="pass1234",
+    role="Member"
+)
+
+print(f"Created users:")
+print(f"Admin: {admin_user.username}, role: {admin_user.role}")
+print(f"Librarian: {librarian_user.username}, role: {librarian_user.role}")
+print(f"Member: {member_user.username}, role: {member_user.role}")
 
 
 if __name__ == '__main__':

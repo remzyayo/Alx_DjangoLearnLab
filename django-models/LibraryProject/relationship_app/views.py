@@ -79,17 +79,17 @@ def is_member(user):
     return user.is_authenticated and user.profile.role == "Member"
 
 def admin_view(request):
-    if request.user.role == "Admin":   # assuming you have a 'role' field on User model
+    if request.user.profile.role == "Admin":   # assuming you have a 'role' field on User model
         return HttpResponse("Welcome, Admin!")
     return HttpResponseForbidden("You are not allowed to access this page.")
 
 def librarian_view(request):
-    if request.user.role == "Librarian":
+    if request.user.profile.role == "Librarian":
         return HttpResponse("Welcome, Librarian!")
     return HttpResponseForbidden("You are not allowed to access this page.")
 
 def member_view(request):
-    if request.user.role == "Member":
+    if request.user.profile.role == "Member":
         return HttpResponse("Welcome, Member!")
     return HttpResponseForbidden("You are not allowed to access this page.")
 

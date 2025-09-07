@@ -69,6 +69,9 @@ def is_librarian(user):
 def is_member(user):
     return user.is_authenticated and user.profile.role == "Member"
 
+def admin_view(request):
+    return render(request, "relationship_app/admin_view.html")
+
 
 # Views restricted by role
 @user_passes_test(is_admin)

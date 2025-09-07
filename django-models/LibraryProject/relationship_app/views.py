@@ -69,14 +69,6 @@ def logout_view(request):
 # ==========================
 
 # Helpers to check roles
-def is_admin(user):
-    return user.is_authenticated and user.profile.role == "Admin"
-
-def is_librarian(user):
-    return user.is_authenticated and user.profile.role == "Librarian"
-
-def is_member(user):
-    return user.is_authenticated and user.profile.role == "Member"
 
 def admin_view(request):
     if request.user.profile.role == "Admin":   # assuming you have a 'role' field on User model

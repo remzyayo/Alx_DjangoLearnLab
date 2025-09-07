@@ -3,6 +3,7 @@ from django.views.generic.detail import DetailView
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import user_passes_test
+from django.http import HttpResponse, HttpResponseForbidden
 from .models import Book
 from .models import Library
 
@@ -70,7 +71,19 @@ def is_member(user):
     return user.is_authenticated and user.profile.role == "Member"
 
 def admin_view(request):
-    return render(request, "relationship_app/admin_view.html")
+    if request.user.role == "Admin":   # assuming you have a 'role' field on User model
+        return HttpResponse("Welcome, Admin!")
+    return HttpResponseForbidden("You are not allowed to access this page.")
+
+def librarian_view(request):
+    if request.user.role == "Librarian":
+        return HttpResponse("Welcome, Librarian!")
+    return HttpResponseForbidden("You are not allowed to access this page.")
+
+def member_view(request):
+    if request.user.role == "Member":
+        return HttpResponse("Welcome, Member!")
+    return HttpResponseForbidden("You are not allowed to access this page.")
 
 
 # Views restricted by role

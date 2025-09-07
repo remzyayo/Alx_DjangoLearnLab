@@ -80,10 +80,6 @@ def is_member(user):
 
 def admin_view(request):
     if request.user.profile.role == "Admin":   # assuming you have a 'role' field on User model
-    profile, _ = UserProfile.objects.get_or_create(user=request.user)
-    if profile.role == "Admin":
-
-
         return HttpResponse("Welcome, Admin!")
     return HttpResponseForbidden("You are not allowed to access this page.")
 

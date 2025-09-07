@@ -10,6 +10,14 @@ from .models import Library
 # ==========================
 # Function-based view for listing all books
 # ==========================
+
+class CustomUser(AbstractUser):
+    ROLE_CHOICES = [
+        ('Admin', 'Admin'),
+        ('Librarian', 'Librarian'),
+        ('Member', 'Member'),
+    ]
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='Member')
 def list_books(request):
     books = Book.objects.all()
     return render(request, "relationship_app/list_books.html", {"books": books})

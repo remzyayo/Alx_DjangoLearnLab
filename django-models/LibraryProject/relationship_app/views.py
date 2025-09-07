@@ -71,7 +71,8 @@ def logout_view(request):
 # Helpers to check roles
 
 def admin_view(request):
-    if request.user.profile.role == "Admin":   # assuming you have a 'role' field on User model
+    profile = getattr(request.user, 'profile', None)
+    if profile and profile.role == "Admin":
         return HttpResponse("Welcome, Admin!")
     return HttpResponseForbidden("You are not allowed to access this page.")
 

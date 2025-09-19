@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import datetime 
+from datetime import datetime
 
 # Create your models here.
 # Author model: Represents a book author with a simple name field

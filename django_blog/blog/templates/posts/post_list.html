@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block content %}
+<h1>All Posts</h1>
+
+{% if user.is_authenticated %}
+  <p><a href="{% url 'posts-create' %}" class="btn btn-primary">Create New Post</a></p>
+{% endif %}
+
+{% for post in posts %}
+  <article class="post-summary mb-4">
+    <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+    <p class="meta">by {{ post.author }} • {{ post.created_at|naturaltime }}</p>
+    <p>{{ post.content|truncatewords:30 }}</p>
+    <p><a href="{{ post.get_absolute_url }}">Read more →</a></p>
+    {% if user == post.author %}
+      <p>
+        <a href="{% url 'posts-update' post.pk %}">Edit</a> |
+        <a href="{% url 'posts-delete' post.pk %}">Delete</a>
+      </p>
+    {% endif %}
+  </article>
+{% empty %}
+  <p>No posts yet.</p>
+{% endfor %}
+
+{% if is_paginated %}
+  <nav>
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}">Next</a>
+    {% endif %}
+  </nav>
+{% endif %}
+{% endblock %}

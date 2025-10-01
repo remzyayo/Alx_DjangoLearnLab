@@ -17,6 +17,7 @@
       <p>
         <a href="{% url 'posts-update' post.pk %}">Edit</a> |
         <a href="{% url 'posts-delete' post.pk %}">Delete</a>
+        <a href="{% url 'posts-create' post.pk %}">New Post</a>
       </p>
     {% endif %}
   </article>

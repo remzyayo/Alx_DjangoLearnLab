@@ -131,7 +131,7 @@ class SearchResultsView(ListView):
             return Post.objects.filter(
                 Q(title__icontains=query) |
                 Q(content__icontains=query) |
-                Q(tags_name_icontains=query)   # works with django-taggit
+                Q(tags__name__icontains=query)   # works with django-taggit
             ).distinct().order_by('-published_date')
         return Post.objects.none()
 

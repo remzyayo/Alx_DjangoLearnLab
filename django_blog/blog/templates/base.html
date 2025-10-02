@@ -65,3 +65,8 @@
   <script src="{% static 'blog/js/script.js' %}"></script>
 </body>
 </html>
+
+<form method="get" action="{% url 'blog:search_posts' %}" class="search-form">
+  <input type="search" name="q" placeholder="Search posts or tags..." value="{{ request.GET.q|default:'' }}">
+  <button type="submit">Search</button>
+</form>

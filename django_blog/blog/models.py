@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from django.conf import settings
 from django.urls import reverse 
 from .models import post 
+from taggit.managers import TaggableManager
 # Create your models here.
 
 class Post(models.Model):
@@ -14,6 +15,9 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    published = models.BooleanField(default=True)
+    tags = TaggableManager(blank=True)
+
 
     class Meta:
        ordering = ['-created_at']

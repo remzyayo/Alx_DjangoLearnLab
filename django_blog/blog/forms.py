@@ -7,6 +7,7 @@ from .models import Comment
 from django.forms import ModelForm
 from taggit.forms import TagWidget
 
+
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True, label='Email')
     first_name = forms.CharField(required=False, label='First name')

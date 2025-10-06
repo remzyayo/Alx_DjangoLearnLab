@@ -43,7 +43,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     - Comments are created with an associated post (post provided in payload or via nested route)
     - Only the comment author can update/delete their comment.
     """
-    queryset = Comment.objects.all
+    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     pagination_class = StandardResultsSetPagination

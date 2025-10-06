@@ -14,7 +14,7 @@ class PostViewSet(viewsets.ModelViewSet):
     - Create: authenticated
     - Update/Delete: owner only
     """
-    queryset = Post.objects.select_related('author').prefetch_related('comments').all()
+    queryset = Post.objects.all()
     pagination_class = StandardResultsSetPagination
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['title', 'content']
@@ -43,7 +43,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     - Comments are created with an associated post (post provided in payload or via nested route)
     - Only the comment author can update/delete their comment.
     """
-    queryset = Comment.objects.select_related('author', 'post').all()
+    queryset = Comment.objects.all
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     pagination_class = StandardResultsSetPagination

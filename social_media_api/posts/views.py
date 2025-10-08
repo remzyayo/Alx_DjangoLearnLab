@@ -94,7 +94,9 @@ class LikePostView(generics.GenericAPIView):
 
     def post(self, request, pk):
         user = request.user
-        post = get_object_or_404(Post, pk=pk)
+        post = generics.get_object_or_404(Post, pk=pk)
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+        
 
         # prevent liking own post is allowed; but prevent duplicate likes
         existing = Like.objects.filter(user=user, post=post).first()

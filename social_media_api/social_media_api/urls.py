@@ -24,6 +24,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/accounts/', include('accounts.urls')),
     path('api/accounts/', include('posts.urls')),
+    path('api/posts/', include('posts.urls', namespace='posts')),
+    path('api/notifications/', include('notification.urls', namespace='notifications')),
 ]
 
 if settings.DEBUG:

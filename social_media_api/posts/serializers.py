@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.conf import settings
-from .models import Post, Comment
+from .models import Post, Comment, Like
 from django.contrib.auth import get_user_model
 from accounts.serializers import UserFollowSerializer
 
@@ -36,8 +36,23 @@ class PostDetailSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     author = UserFollowSerializer(read_only=True)  # compact author info
-
+    likes_count = serializers.IntegerField(source='likes.count', read_only=True)
     class Meta:
         model = Post
         fields = ['id', 'author', 'content', 'created_at']  # adapt to your fields
-        read_only_fields = ['id', 'author', 'created_at']
+        read_only_fields = ['id', 'author', 'created_at', 'likes_count']
+
+        
+class SimpleUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username')
+
+
+class LikeSerializer(serializers.ModelSerializer):
+    user = SimpleUserSerializer(read_only=True)
+
+    class Meta:
+        model = Like
+        fields = ('id', 'user', 'post', 'created_at')
+        read_only_fields = ('id', 'user', 'created_at')

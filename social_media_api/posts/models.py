@@ -9,7 +9,7 @@ class Post(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
 
     class Meta:
         ordering = ['-created_at']
@@ -29,3 +29,23 @@ class Comment(models.Model):
 
     def _str_(self):
         return f'Comment by {self.author} on {self.post_id}'
+    
+class Like(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='likes'
+    )
+    post = models.ForeignKey(
+        'posts.Post',  
+        on_delete=models.CASCADE,
+        related_name='likes'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'post')
+        ordering = ['-created_at']
+
+    def _str_(self):
+        return f'{self.user} likes {self.post_id}'

@@ -5,9 +5,10 @@ from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from .serializers import UserFollowSerializer
-
 from .serializers import RegistrationSerializer, LoginSerializer, UserProfileSerializer
 from .models import CustomUser
+from django.contrib.contenttypes.models import ContentType
+from notifications.models import Notification
 
 class RegisterView(APIView):
     permission_classes = [permissions.AllowAny]
@@ -85,6 +86,14 @@ class FollowUserView(generics.GenericAPIView):
                             status=status.HTTP_200_OK)
 
         user.follow(target_user)
+
+        Notification.objects.create(
+           recipient=target_user,
+           actor=user,
+           verb='followed you',
+           target_content_type=ContentType.objects.get_for_model(user),  # pointing to user
+           target_object_id=str(user.pk)
+    )
         serializer = self.get_serializer(target_user)
         return Response({
             'detail': f'You are now following {target_user.username}.',
@@ -118,3 +127,5 @@ class UnfollowUserView(generics.GenericAPIView):
             'detail': f'You have unfollowed {target_user.username}.',
             'user': serializer.data
         }, status=status.HTTP_200_OK)
+
+

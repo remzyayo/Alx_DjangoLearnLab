@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.conf import settings
 from .models import Post, Comment
 from django.contrib.auth import get_user_model
+from accounts.serializers import UserFollowSerializer
 
 User = get_user_model()
 
@@ -31,3 +32,12 @@ class PostDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['id', 'title', 'author', 'content', 'comments', 'created_at', 'updated_at']
+
+
+class PostSerializer(serializers.ModelSerializer):
+    author = UserFollowSerializer(read_only=True)  # compact author info
+
+    class Meta:
+        model = Post
+        fields = ['id', 'author', 'content', 'created_at']  # adapt to your fields
+        read_only_fields = ['id', 'author', 'created_at']

@@ -1,9 +1,9 @@
-from rest_framework import viewsets, permissions, filters
+from rest_framework import viewsets, permissions, filters, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import Post, Comment
-from .serializers import PostListSerializer, PostDetailSerializer, CommentSerializer
+from .serializers import PostListSerializer, PostDetailSerializer, CommentSerializer, PostSerializer
 from .permissions import IsOwnerOrReadOnly
 from .pagination import StandardResultsSetPagination
 
@@ -64,3 +64,19 @@ class CommentViewSet(viewsets.ModelViewSet):
         if self.action in ['list', 'retrieve']:
             return [permissions.AllowAny()]
         return [permissions.IsAuthenticated(), IsOwnerOrReadOnly()]
+    
+
+class FeedListView(generics.ListAPIView):
+    """
+    Returns posts authored by users the current user follows.
+    Ordered newest first.
+    """
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = None  # or your pagination
+
+    def get_queryset(self):
+        user = self.request.user
+        # posts from users the current user follows
+        following_qs = user.following.all()
+        return Post.objects.filter(author__in=following_qs).order_by('-created_at')

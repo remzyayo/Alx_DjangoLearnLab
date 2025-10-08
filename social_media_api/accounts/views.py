@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status, permissions
 from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
+from rest_framework.decorators import api_view, permission_classes
+from .serializers import UserFollowSerializer
 
 from .serializers import RegistrationSerializer, LoginSerializer, UserProfileSerializer
 from .models import CustomUser
@@ -59,3 +61,45 @@ class ProfileView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def follow_user(request, user_id):
+    """
+    Authenticated user follows target user.
+    """
+    target = get_object_or_404(CustomUser, pk=user_id)
+    if target == request.user:
+        return Response({'detail': 'You cannot follow yourself.'},
+                        status=status.HTTP_400_BAD_REQUEST)
+
+    if request.user.is_following(target):
+        return Response({'detail': 'Already following.'}, status=status.HTTP_200_OK)
+
+    request.user.follow(target)
+    return Response({
+        'detail': 'Followed user.',
+        'user': UserFollowSerializer(target).data
+    }, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def unfollow_user(request, user_id):
+    """
+    Authenticated user unfollows target user.
+    """
+    target = get_object_or_404(CustomUser, pk=user_id)
+    if target == request.user:
+        return Response({'detail': 'You cannot unfollow yourself.'},
+                        status=status.HTTP_400_BAD_REQUEST)
+
+    if not request.user.is_following(target):
+        return Response({'detail': 'Not following.'}, status=status.HTTP_200_OK)
+
+    request.user.unfollow(target)
+    return Response({
+        'detail': 'Unfollowed user.',
+        'user': UserFollowSerializer(target).data
+    }, status=status.HTTP_200_OK)

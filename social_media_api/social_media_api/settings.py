@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
+
+PORT = int(os.environ.get("PORT", 8000))
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -102,6 +105,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        'default': dj_database_url(default=os.environ.get('DATABASE_URL'))
     }
 }
 
